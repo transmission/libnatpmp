@@ -42,6 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define ECONNREFUSED WSAECONNREFUSED
 #include "wingettimeofday.h"
+#define gettimeofday natpmp_gettimeofday
 #else
 #include <errno.h>
 #include <unistd.h>
