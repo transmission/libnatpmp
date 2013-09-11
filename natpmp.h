@@ -1,6 +1,6 @@
-/* $Id: natpmp.h,v 1.16 2012/03/05 19:38:37 nanard Exp $ */
+/* $Id: natpmp.h,v 1.17 2013/09/10 20:09:04 nanard Exp $ */
 /* libnatpmp
-Copyright (c) 2007-2011, Thomas BERNARD
+Copyright (c) 2007-2013, Thomas BERNARD
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifdef WIN32
 #include <winsock2.h>
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) || _MSC_VER >= 1600
 #include <stdint.h>
 #else
 typedef unsigned long uint32_t;
