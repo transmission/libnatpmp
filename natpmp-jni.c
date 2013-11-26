@@ -80,6 +80,8 @@ JNIEXPORT jint JNICALL Java_fr_free_miniupnp_libnatpmp_NatPmp_sendPublicAddressR
 
 
 JNIEXPORT void JNICALL Java_fr_free_miniupnp_libnatpmp_NatPmp_startup(JNIEnv* env, jclass cls) {
+  (void)env;
+  (void)cls;
 #ifdef WIN32
   WSADATA wsaData;
   WORD wVersionRequested = MAKEWORD(2, 2);
