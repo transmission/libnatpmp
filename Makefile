@@ -1,7 +1,7 @@
 # $Id: Makefile,v 1.19 2012/08/21 17:24:07 nanard Exp $
 # This Makefile is designed for use with GNU make
 # libnatpmp
-# (c) 2007-2011 Thomas Bernard
+# (c) 2007-2013 Thomas Bernard
 # http://miniupnp.free.fr/libnatpmp.html
 
 OS = $(shell uname -s)
@@ -19,8 +19,6 @@ endif
 ifneq (,$(findstring WIN,$(OS)))
 JARSUFFIX=win32
 endif
-
-JAVAC ?= javac
 
 # APIVERSION is used in soname
 APIVERSION = 1
@@ -61,7 +59,7 @@ HEADERS = natpmp.h
 
 EXECUTABLES = testgetgateway natpmpc-shared natpmpc-static
 
-INSTALLPREFIX ?= /usr
+INSTALLPREFIX ?= $(PREFIX)/usr
 INSTALLDIRINC = $(INSTALLPREFIX)/include
 
 ifeq ($(ARCH),i686)
@@ -70,10 +68,13 @@ else
 ifeq ($(ARCH),x86_64)
 INSTALLDIRLIB = $(INSTALLPREFIX)/lib64
 endif
+endif
 
 INSTALLDIRBIN = $(INSTALLPREFIX)/bin
 
 JAVA ?= java
+JAVAC ?= javac
+JAVAH ?= javah
 JAVAPACKAGE = fr/free/miniupnp/libnatpmp
 JAVACLASSES = $(JAVAPACKAGE)/NatPmp.class $(JAVAPACKAGE)/NatPmpResponse.class $(JAVAPACKAGE)/LibraryExtractor.class $(JAVAPACKAGE)/URLUtils.class
 JNIHEADERS = fr_free_miniupnp_libnatpmp_NatPmp.h
@@ -102,22 +103,25 @@ depend:
 	makedepend -f$(MAKEFILE_LIST) -Y $(OBJS:.o=.c) 2>/dev/null
 
 install:	$(HEADERS) $(STATICLIB) $(SHAREDLIB) natpmpc-shared
-	$(INSTALL) -d $(DESTDIR)$(INSTALLDIRINC)
-	$(INSTALL) -m 644 $(HEADERS) $(DESTDIR)$(INSTALLDIRINC)
-	$(INSTALL) -d $(DESTDIR)$(INSTALLDIRLIB)
-	$(INSTALL) -m 644 $(STATICLIB) $(DESTDIR)$(INSTALLDIRLIB)
-	$(INSTALL) -m 644 $(SHAREDLIB) $(DESTDIR)$(INSTALLDIRLIB)/$(SONAME)
-	$(INSTALL) -d $(DESTDIR)$(INSTALLDIRBIN)
-	$(INSTALL) -m 755 natpmpc-shared $(DESTDIR)$(INSTALLDIRBIN)/natpmpc
-	ln -s -f $(SONAME) $(DESTDIR)$(INSTALLDIRLIB)/$(SHAREDLIB)
+	$(INSTALL) -d $(INSTALLDIRINC)
+	$(INSTALL) -m 644 $(HEADERS) $(INSTALLDIRINC)
+	$(INSTALL) -d $(INSTALLDIRLIB)
+	$(INSTALL) -m 644 $(STATICLIB) $(INSTALLDIRLIB)
+	$(INSTALL) -m 644 $(SHAREDLIB) $(INSTALLDIRLIB)/$(SONAME)
+	$(INSTALL) -d $(INSTALLDIRBIN)
+	$(INSTALL) -m 755 natpmpc-shared $(INSTALLDIRBIN)/natpmpc
+	ln -s -f $(SONAME) $(INSTALLDIRLIB)/$(SHAREDLIB)
 
 $(JNIHEADERS): fr/free/miniupnp/libnatpmp/NatPmp.class
-	javah -jni fr.free.miniupnp.libnatpmp.NatPmp
+	$(JAVAH) -jni fr.free.miniupnp.libnatpmp.NatPmp
 
 %.class: %.java
 	$(JAVAC) -cp . $<
 
 $(JNISHAREDLIB): $(JNIHEADERS) $(JAVACLASSES) $(LIBOBJS)
+ifeq (,$(JAVA_HOME))
+	@echo "Check your JAVA_HOME environement variable" && false
+endif
 ifneq (,$(findstring WIN,$(OS)))
 	$(CC) -m32 -D_JNI_Implementation_ -Wl,--kill-at \
 	-I"$(JAVA_HOME)/include" -I"$(JAVA_HOME)/include/win32" \
