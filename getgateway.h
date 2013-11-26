@@ -36,13 +36,10 @@ POSSIBILITY OF SUCH DAMAGE.
 typedef unsigned long uint32_t;
 typedef unsigned short uint16_t;
 #endif
-//#define in_addr_t uint32_t
-//typedef in_addr_t uint32_t;
-//#include <arpa/inet.h>
-
+#define in_addr_t uint32_t
 #endif
 #include "declspec.h"
-#define in_addr_t uint32_t
+
 /* getdefaultgateway() :
  * return value :
  *    0 : success
