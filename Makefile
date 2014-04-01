@@ -143,7 +143,7 @@ jar: $(JNISHAREDLIB)
 
 jnitest: $(JNISHAREDLIB) JavaTest.class
 	$(RM) libjninatpmp.so
-	java -Djna.nosys=true -cp . JavaTest
+	$(JAVA) -Djna.nosys=true -cp . JavaTest
 
 mvn_install:
 	mvn install:install-file -Dfile=java/natpmp_$(JARSUFFIX).jar \
