@@ -2,18 +2,18 @@
 @SET LIBS=-lws2_32 -liphlpapi
 
 @echo Compile getgateway
-gcc -c -Wall -Os -DWIN32 -DSTATICLIB -DENABLE_STRNATPMPERR getgateway.c
-gcc -c -Wall -Os -DWIN32 -DSTATICLIB -DENABLE_STRNATPMPERR testgetgateway.c
+gcc -c -Wall -Os -DWIN32 -DNATPMP_STATICLIB -DENABLE_STRNATPMPERR getgateway.c
+gcc -c -Wall -Os -DWIN32 -DNATPMP_STATICLIB -DENABLE_STRNATPMPERR testgetgateway.c
 gcc -o testgetgateway getgateway.o testgetgateway.o %LIBS%
 del testgetgateway.o
 
 @echo Compile natpmp-static:
-gcc -c -Wall -Os -DWIN32 -DSTATICLIB -DENABLE_STRNATPMPERR getgateway.c
-gcc -c -Wall -Os -DWIN32 -DSTATICLIB -DENABLE_STRNATPMPERR natpmp.c
+gcc -c -Wall -Os -DWIN32 -DNATPMP_STATICLIB -DENABLE_STRNATPMPERR getgateway.c
+gcc -c -Wall -Os -DWIN32 -DNATPMP_STATICLIB -DENABLE_STRNATPMPERR natpmp.c
 gcc -c -Wall -Os -DWIN32 wingettimeofday.c
 ar cr natpmp.a getgateway.o natpmp.o wingettimeofday.o
 del getgateway.o natpmp.o
-gcc -c -Wall -Os -DWIN32 -DSTATICLIB -DENABLE_STRNATPMPERR natpmpc.c
+gcc -c -Wall -Os -DWIN32 -DNATPMP_STATICLIB -DENABLE_STRNATPMPERR natpmpc.c
 gcc -o natpmpc-static natpmpc.o natpmp.a %LIBS%
 upx --best natpmpc-static.exe
 del natpmpc.o

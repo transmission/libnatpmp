@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <arpa/inet.h>
 #endif
 
-#define STATICLIB
+#define NATPMP_STATICLIB
 #include "structmember.h"
 #include "natpmp.h"
 
