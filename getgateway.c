@@ -29,7 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #include <stdio.h>
 #include <ctype.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <netinet/in.h>
 #endif
 #if !defined(_MSC_VER)
@@ -74,7 +74,7 @@ int getdefaultgateway(in_addr_t * addr)
 }
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #undef USE_PROC_NET_ROUTE
 #undef USE_SOCKET_ROUTE
 #undef USE_SYSCTL_NET_ROUTE
@@ -129,7 +129,7 @@ int getdefaultgateway(in_addr_t * addr)
 
 #include "getgateway.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #define SUCCESS (0)
 #define FAILED  (-1)
 #endif

@@ -28,7 +28,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef __WINGETTIMEOFDAY_H__
 #define __WINGETTIMEOFDAY_H__
-#ifdef WIN32
+#ifdef _WIN32
 #if defined(_MSC_VER)
 #include <time.h>
 #else

@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <sys/time.h>
 #endif	/* !defined(_MSC_VER) */
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 #if !defined(_MSC_VER) || _MSC_VER >= 1600
 #include <stdint.h>
@@ -47,10 +47,10 @@ typedef unsigned short uint16_t;
 #endif	/* !defined(_MSC_VER) || _MSC_VER >= 1600 */
 #define in_addr_t uint32_t
 #include "declspec.h"
-#else	/* WIN32 */
+#else	/* _WIN32 */
 #define LIBSPEC
 #include <netinet/in.h>
-#endif	/* WIN32 */
+#endif	/* _WIN32 */
 
 /* causes problem when installing. Maybe should it be inlined ? */
 /* #include "declspec.h" */

@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #else
 #include <unistd.h>
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 #else
 #include <netinet/in.h>
@@ -81,7 +81,7 @@ int main(int argc, char * * argv)
 	in_addr_t gateway = 0;
 	struct in_addr gateway_in_use;
 
-#ifdef WIN32
+#ifdef _WIN32
 	WSADATA wsaData;
 	int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if(nResult != NO_ERROR)
