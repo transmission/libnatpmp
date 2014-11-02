@@ -67,13 +67,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #undef USE_SYSCTL_NET_ROUTE
 #endif
 
-#if !defined(USE_PROC_NET_ROUTE) && !defined(USE_SOCKET_ROUTE) && !defined(USE_SYSCTL_NET_ROUTE)
-int getdefaultgateway(in_addr_t * addr)
-{
-	return -1;
-}
-#endif
-
 #ifdef WIN32
 #undef USE_PROC_NET_ROUTE
 #undef USE_SOCKET_ROUTE
@@ -124,6 +117,7 @@ int getdefaultgateway(in_addr_t * addr)
 
 #ifdef USE_WIN32_CODE_2
 #include <windows.h>
+#include <winsock2.h>
 #include <iphlpapi.h>
 #endif
 
@@ -134,7 +128,8 @@ int getdefaultgateway(in_addr_t * addr)
 #define FAILED  (-1)
 #endif
 
-#ifdef USE_PROC_NET_ROUTE
+#if defined(USE_PROC_NET_ROUTE)
+
 /*
  parse /proc/net/route which is as follow :
 
@@ -179,10 +174,8 @@ int getdefaultgateway(in_addr_t * addr)
 		fclose(f);
 	return FAILED;
 }
-#endif /* #ifdef USE_PROC_NET_ROUTE */
 
-
-#ifdef USE_SYSCTL_NET_ROUTE
+#elif defined(USE_SYSCTL_NET_ROUTE)
 
 #define ROUNDUP(a) \
 	((a) > 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
@@ -237,10 +230,9 @@ int getdefaultgateway(in_addr_t * addr)
 	}
 	return r;
 }
-#endif /* #ifdef USE_SYSCTL_NET_ROUTE */
 
+#elif defined(USE_SOCKET_ROUTE)
 
-#ifdef USE_SOCKET_ROUTE
 /* Thanks to Darren Kenny for this code */
 #define NEXTADDR(w, u) \
         if (rtm_addrs & (w)) {\
@@ -322,10 +314,10 @@ int getdefaultgateway(in_addr_t *addr)
       return FAILED;
   }
 }
-#endif /* #ifdef USE_SOCKET_ROUTE */
 
-#ifdef USE_WIN32_CODE
-LIBSPEC int getdefaultgateway(in_addr_t * addr)
+#elif defined(USE_WIN32_CODE)
+
+int getdefaultgateway(in_addr_t * addr)
 {
 	HKEY networkCardsKey;
 	HKEY networkCardKey;
@@ -505,9 +497,9 @@ LIBSPEC int getdefaultgateway(in_addr_t * addr)
 
 	return -1;
 }
-#endif /* #ifdef USE_WIN32_CODE */
 
-#ifdef USE_WIN32_CODE_2
+#elif defined(USE_WIN32_CODE_2)
+
 int getdefaultgateway(in_addr_t *addr)
 {
 	MIB_IPFORWARDROW ip_forward;
@@ -517,9 +509,9 @@ int getdefaultgateway(in_addr_t *addr)
 	*addr = ip_forward.dwForwardNextHop;
 	return 0;
 }
-#endif /* #ifdef USE_WIN32_CODE_2 */
 
-#ifdef USE_HAIKU_CODE
+#elif defined(USE_HAIKU_CODE)
+
 int getdefaultgateway(in_addr_t *addr)
 {
     int fd, ret = -1;
@@ -570,6 +562,13 @@ fail:
     close(fd);
     return ret;
 }
-#endif /* #ifdef USE_HAIKU_CODE */
 
+#else /* fallback */
 
+int getdefaultgateway(in_addr_t * addr)
+{
+    (void)addr;
+    return -1;
+}
+
+#endif
