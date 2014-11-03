@@ -27,7 +27,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 #include <stdio.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 #else
 #include <netinet/in.h>
@@ -41,7 +41,7 @@ int main(int argc, char * * argv)
 	(void)argv;
 	struct in_addr gatewayaddr;
 	int r;
-#ifdef WIN32
+#ifdef _WIN32
 	uint32_t temp = 0;
 	r = getdefaultgateway(&temp);
 	gatewayaddr.S_un.S_addr = temp;

@@ -3,7 +3,7 @@
 #define __int64 uint64_t
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -82,7 +82,7 @@ JNIEXPORT jint JNICALL Java_fr_free_miniupnp_libnatpmp_NatPmp_sendPublicAddressR
 JNIEXPORT void JNICALL Java_fr_free_miniupnp_libnatpmp_NatPmp_startup(JNIEnv* env, jclass cls) {
   (void)env;
   (void)cls;
-#ifdef WIN32
+#ifdef _WIN32
   WSADATA wsaData;
   WORD wVersionRequested = MAKEWORD(2, 2);
   WSAStartup(wVersionRequested, &wsaData);
