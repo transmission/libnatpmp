@@ -5,7 +5,7 @@
 # http://miniupnp.free.fr/libnatpmp.html
 
 OS = $(shell uname -s)
-CC = gcc
+CC ?= gcc
 INSTALL = install -p
 ARCH = $(shell uname -m | sed -e s/i.86/i686/)
 VERSION = $(shell cat VERSION)
