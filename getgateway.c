@@ -116,8 +116,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #ifdef USE_WIN32_CODE_2
-#include <windows.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <iphlpapi.h>
 #endif
 

@@ -1,7 +1,7 @@
 # $Id: Makefile,v 1.19 2012/08/21 17:24:07 nanard Exp $
 # This Makefile is designed for use with GNU make
 # libnatpmp
-# (c) 2007-2013 Thomas Bernard
+# (c) 2007-2015 Thomas Bernard
 # http://miniupnp.free.fr/libnatpmp.html
 
 OS = $(shell uname -s)
@@ -46,7 +46,9 @@ ifneq (,$(findstring WIN,$(OS)))
   SHAREDLIB = natpmp.dll
   JNISHAREDLIB = jninatpmp.dll
   CC = i686-w64-mingw32-gcc
-  EXTRA_LD = -lws2_32 -lIphlpapi -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc --Wl,kill-at
+  #EXTRA_LD = -lws2_32 -lIphlpapi -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc --Wl,kill-at
+  EXTRA_LD = -lws2_32 -lIphlpapi -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc
+  LIBOBJS += wingettimeofday.o
 else
   SHAREDLIB = libnatpmp.so
   JNISHAREDLIB = libjninatpmp.so

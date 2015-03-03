@@ -268,7 +268,7 @@ NATPMP_LIBSPEC int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 	return n;
 }
 
-int readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * response)
+NATPMP_LIBSPEC int readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * response)
 {
 	int n;
 	if(!p || !response)
