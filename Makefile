@@ -6,12 +6,13 @@
 
 OS = $(shell uname -s)
 CC ?= gcc
-INSTALL = install -p
 ARCH = $(shell uname -m | sed -e s/i.86/i686/)
 VERSION = $(shell cat VERSION)
+INSTALL ?= $(shell which install)
 
 ifeq ($(OS), Darwin)
 JARSUFFIX=mac
+LIBTOOL ?= $(shell which libtool)
 endif
 ifeq ($(OS), Linux)
 JARSUFFIX=linux
@@ -38,7 +39,7 @@ STATICLIB = libnatpmp.a
 ifeq ($(OS), Darwin)
   SHAREDLIB = libnatpmp.dylib
   JNISHAREDLIB = libjninatpmp.jnilib
-  SONAME = $(basename $(SHAREDLIB)).dylib
+  SONAME = $(basename $(SHAREDLIB)).$(APIVERSION).dylib
   CFLAGS := -DMACOSX -D_DARWIN_C_SOURCE $(CFLAGS) -I/System/Library/Frameworks/JavaVM.framework/Headers
   SONAMEFLAGS=-Wl,-install_name,$(JNISHAREDLIB) -dynamiclib -framework JavaVM
 else
@@ -46,8 +47,9 @@ ifneq (,$(findstring WIN,$(OS)))
   SHAREDLIB = natpmp.dll
   JNISHAREDLIB = jninatpmp.dll
   CC = i686-w64-mingw32-gcc
-  #EXTRA_LD = -lws2_32 -lIphlpapi -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc --Wl,kill-at
-  EXTRA_LD = -lws2_32 -lIphlpapi -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc
+  LDLIBS += -lws2_32 -lIphlpapi
+  LDFLAGS += -Wl,--no-undefined -Wl,--enable-runtime-pseudo-reloc
+  #LDFLAGS += --Wl,kill-at
   LIBOBJS += wingettimeofday.o
 else
   SHAREDLIB = libnatpmp.so
@@ -64,12 +66,9 @@ EXECUTABLES = testgetgateway natpmpc-shared natpmpc-static
 INSTALLPREFIX ?= $(PREFIX)/usr
 INSTALLDIRINC = $(INSTALLPREFIX)/include
 
-ifeq ($(ARCH),i686)
 INSTALLDIRLIB = $(INSTALLPREFIX)/lib
-else
 ifeq ($(ARCH),x86_64)
 INSTALLDIRLIB = $(INSTALLPREFIX)/lib64
-endif
 endif
 
 INSTALLDIRBIN = $(INSTALLPREFIX)/bin
@@ -164,22 +163,26 @@ cleaninstall:
 	$(RM) $(INSTALLDIRLIB)/$(STATICLIB)
 
 testgetgateway:	testgetgateway.o getgateway.o
-	$(CC) $(LDFLAGS) -o $@ $^ $(EXTRA_LD)
 
 natpmpc-static:	natpmpc.o $(STATICLIB)
-	$(CC) $(LDFLAGS) -o $@ $^ $(EXTRA_LD)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 natpmpc-shared:	natpmpc.o $(SHAREDLIB)
-	$(CC) $(LDFLAGS) -o $@ $^ $(EXTRA_LD)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(STATICLIB):	$(LIBOBJS)
+ifeq ($(OS), Darwin)
+	$(LIBTOOL) -static -o $@ $?
+else
 	$(AR) crs $@ $?
+endif
 
 $(SHAREDLIB):	$(LIBOBJS)
 ifeq ($(OS), Darwin)
-	$(CC) -dynamiclib -Wl,-install_name,$(SONAME) -o $@ $^
+#	$(CC) -dynamiclib $(LDFLAGS) -Wl,-install_name,$(SONAME) -o $@ $^ $(LDLIBS)
+	$(CC) -dynamiclib $(LDFLAGS) -Wl,-install_name,$(INSTALLDIRLIB)/$(SONAME) -o $@ $^ $(LDLIBS)
 else
-	$(CC) -shared -Wl,-soname,$(SONAME) -o $@ $^ $(EXTRA_LD)
+	$(CC) -shared $(LDFLAGS) -Wl,-soname,$(SONAME) -o $@ $^ $(LDLIBS)
 endif
 
 
