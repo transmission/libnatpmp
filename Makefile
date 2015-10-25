@@ -185,7 +185,7 @@ endif
 
 # DO NOT DELETE
 
-natpmp.o: natpmp.h getgateway.h declspec.h
-getgateway.o: getgateway.h declspec.h
-testgetgateway.o: getgateway.h declspec.h
+natpmp.o: natpmp.h getgateway.h natpmp_declspec.h
+getgateway.o: getgateway.h natpmp_declspec.h
+testgetgateway.o: getgateway.h natpmp_declspec.h
 natpmpc.o: natpmp.h

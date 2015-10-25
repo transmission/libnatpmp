@@ -46,14 +46,10 @@ typedef unsigned long uint32_t;
 typedef unsigned short uint16_t;
 #endif	/* !defined(_MSC_VER) || _MSC_VER >= 1600 */
 #define in_addr_t uint32_t
-#include "declspec.h"
 #else	/* _WIN32 */
-#define NATPMP_LIBSPEC
 #include <netinet/in.h>
 #endif	/* _WIN32 */
-
-/* causes problem when installing. Maybe should it be inlined ? */
-/* #include "declspec.h" */
+#include "natpmp_declspec.h"
 
 typedef struct {
 	int s;	/* socket */
