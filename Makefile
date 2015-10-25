@@ -41,7 +41,7 @@ ifeq ($(OS), Darwin)
   JNISHAREDLIB = libjninatpmp.jnilib
   SONAME = $(basename $(SHAREDLIB)).$(APIVERSION).dylib
   CFLAGS := -DMACOSX -D_DARWIN_C_SOURCE $(CFLAGS) -I/System/Library/Frameworks/JavaVM.framework/Headers
-  SONAMEFLAGS=-Wl,-install_name,$(JNISHAREDLIB) -dynamiclib -framework JavaVM
+  SONAMEFLAGS=-Wl,-install_name,$(JNISHAREDLIB) -framework JavaVM
 else
 ifneq (,$(findstring WIN,$(OS)))
   SHAREDLIB = natpmp.dll
@@ -130,7 +130,11 @@ ifneq (,$(findstring WIN,$(OS)))
 	-o $(JNISHAREDLIB) -L. -lnatpmp -lws2_32 -lIphlpapi
 else
 	$(CC) $(CFLAGS) -c -I"$(JAVA_HOME)/include" natpmp-jni.c
-	$(CC) $(CFLAGS) -o $(JNISHAREDLIB) -shared $(SONAMEFLAGS)  natpmp-jni.o -lc $(LIBOBJS)
+ifeq ($(OS), Darwin)
+	$(CC) $(LDFLAGS) -o $(JNISHAREDLIB) -dynamiclib $(SONAMEFLAGS) natpmp-jni.o -lc $(LIBOBJS)
+else
+	$(CC) $(LDFLAGS) -o $(JNISHAREDLIB) -shared $(SONAMEFLAGS) natpmp-jni.o -lc $(LIBOBJS)
+endif
 endif
 
 jar: $(JNISHAREDLIB)
