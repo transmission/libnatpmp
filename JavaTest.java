@@ -1,3 +1,4 @@
+// vim: tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -13,14 +14,19 @@ class JavaTest {
         NatPmpResponse response = new NatPmpResponse();
 
         int result = -1;
-        do{
+        for(;;) {
             result = natpmp.readNatPmpResponseOrRetry(response);
+	    if (result == 0) break;
+	    if (result != -100) { // -100 = NATPMP_TRYAGAIN
+		String errorString = String.format("NATPMP error %d", result);
+		throw new RuntimeException(errorString);
+	    }
 	    try {
 		Thread.sleep(4000);
 	    } catch (InterruptedException e) {
 		//fallthrough
 	    }
-        } while (result != 0);
+	}
 
 	byte[] bytes = intToByteArray(response.addr);
 
