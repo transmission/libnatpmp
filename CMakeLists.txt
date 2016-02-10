@@ -18,3 +18,10 @@ if (WIN32)
 endif (WIN32)
 
 add_library(natpmp STATIC ${NATPMP_SOURCES})
+
+add_executable(natpmpc natpmpc.c)
+target_link_libraries(natpmpc natpmp)
+
+add_executable(testgetgateway
+	testgetgateway.c
+	getgateway.c)
