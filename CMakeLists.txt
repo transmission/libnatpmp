@@ -3,11 +3,18 @@ cmake_minimum_required(VERSION 2.6)
 project(natpmp)
 
 add_definitions( -DENABLE_STRNATPMPERR )
-add_definitions( -DNATPMP_STATICLIB )
+if (WIN32)
+	add_definitions( -DNATPMP_STATICLIB )
+endif (WIN32)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(natpmp STATIC
+set (NATPMP_SOURCES
         natpmp.c
         getgateway.c
-        wingettimeofday.c
 )
+
+if (WIN32)
+    set (NATPMP_SOURCES ${NATPMP_SOURCES} wingettimeofday.c)
+endif (WIN32)
+
+add_library(natpmp STATIC ${NATPMP_SOURCES})
