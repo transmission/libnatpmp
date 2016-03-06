@@ -10,7 +10,6 @@ add_definitions( -DENABLE_STRNATPMPERR )
 if (WIN32)
 	add_definitions( -DNATPMP_STATICLIB )
 endif (WIN32)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set (NATPMP_SOURCES
         natpmp.c
@@ -22,6 +21,7 @@ if (WIN32)
 endif (WIN32)
 
 add_library(natpmp STATIC ${NATPMP_SOURCES})
+target_include_directories(natpmp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(natpmpc natpmpc.c)
 target_link_libraries(natpmpc natpmp)
