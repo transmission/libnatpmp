@@ -17,7 +17,7 @@ endif (WIN32)
 
 # Library itself
 add_library(natpmp STATIC ${NATPMP_SOURCES})
-target_include_directories(natpmp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(natpmp PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_compile_definitions(natpmp PRIVATE -DENABLE_STRNATPMPERR)
 
 if (WIN32)
