@@ -224,7 +224,7 @@ int main(int argc, char * * argv)
 		}
 
 		printf("Mapped public port %hu protocol %s to local port %hu "
-		       "liftime %u\n",
+		       "lifetime %u\n",
 	    	   response.pnu.newportmapping.mappedpublicport,
 			   response.type == NATPMP_RESPTYPE_UDPPORTMAPPING ? "UDP" :
 			    (response.type == NATPMP_RESPTYPE_TCPPORTMAPPING ? "TCP" :

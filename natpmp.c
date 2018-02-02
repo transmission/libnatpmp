@@ -129,7 +129,7 @@ int sendnatpmprequest(natpmp_t * p)
 	int n;
 	if(!p)
 		return NATPMP_ERR_INVALIDARGS;
-	/* TODO : check if no request is allready pending */
+	/* TODO : check if no request is already pending */
 	p->has_pending_request = 1;
 	p->try_number = 1;
 	n = sendpendingrequest(p);
