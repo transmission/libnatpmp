@@ -4,20 +4,18 @@
 # (c) 2007-2015 Thomas Bernard
 # http://miniupnp.free.fr/libnatpmp.html
 
-OS = $(shell uname -s)
+OS = $(shell $(CC) -dumpmachine)
 CC ?= gcc
-ARCH = $(shell uname -m | sed -e s/i.86/i686/)
+ARCH = $(OS)
 VERSION = $(shell cat VERSION)
 INSTALL ?= $(shell which install)
 
-ifeq ($(OS), Darwin)
+ifneq (, $(findstring darwin, $(OS)))
 JARSUFFIX=mac
 LIBTOOL ?= $(shell which libtool)
-endif
-ifeq ($(OS), Linux)
+else ifneq (, $(findstring linux, $(OS)))
 JARSUFFIX=linux
-endif
-ifneq (,$(findstring WIN,$(OS)))
+else ifneq (, $(findstring mingw, $(OS))$(findstring cygwin, $(OS))$(findstring msys, $(OS)))
 JARSUFFIX=win32
 endif
 
@@ -36,14 +34,14 @@ LIBOBJS = natpmp.o getgateway.o
 OBJS = $(LIBOBJS) testgetgateway.o natpmpc.o natpmp-jni.o
 
 STATICLIB = libnatpmp.a
-ifeq ($(OS), Darwin)
+ifneq (, $(findstring darwin, $(OS)))
   SHAREDLIB = libnatpmp.dylib
   JNISHAREDLIB = libjninatpmp.jnilib
   SONAME = $(basename $(SHAREDLIB)).$(APIVERSION).dylib
   CFLAGS := -DMACOSX -D_DARWIN_C_SOURCE $(CFLAGS) -I/System/Library/Frameworks/JavaVM.framework/Headers
   SONAMEFLAGS=-Wl,-install_name,$(JNISHAREDLIB) -framework JavaVM
 else
-ifneq (,$(findstring WIN,$(OS)))
+ifneq (, $(findstring mingw, $(OS))$(findstring cygwin, $(OS))$(findstring msys, $(OS)))
   SHAREDLIB = natpmp.dll
   JNISHAREDLIB = jninatpmp.dll
   CC = i686-w64-mingw32-gcc
@@ -67,7 +65,7 @@ INSTALLPREFIX ?= $(PREFIX)/usr
 INSTALLDIRINC = $(INSTALLPREFIX)/include
 
 INSTALLDIRLIB = $(INSTALLPREFIX)/lib
-ifeq ($(ARCH),x86_64)
+ifneq (, $(findstring x86_64, $(ARCH)))
 INSTALLDIRLIB = $(INSTALLPREFIX)/lib64
 endif
 
@@ -123,14 +121,14 @@ $(JNISHAREDLIB): $(JNIHEADERS) $(JAVACLASSES) $(LIBOBJS)
 ifeq (,$(JAVA_HOME))
 	@echo "Check your JAVA_HOME environement variable" && false
 endif
-ifneq (,$(findstring WIN,$(OS)))
+ifneq (, $(findstring mingw, $(OS))$(findstring cygwin, $(OS))$(findstring msys, $(OS)))
 	$(CC) -m32 -D_JNI_Implementation_ -Wl,--kill-at \
 	-I"$(JAVA_HOME)/include" -I"$(JAVA_HOME)/include/win32" \
 	natpmp-jni.c -shared \
 	-o $(JNISHAREDLIB) -L. -lnatpmp -lws2_32 -lIphlpapi
 else
 	$(CC) $(CFLAGS) -c -I"$(JAVA_HOME)/include" natpmp-jni.c
-ifeq ($(OS), Darwin)
+ifneq (, $(findstring darwin, $(OS)))
 	$(CC) $(LDFLAGS) -o $(JNISHAREDLIB) -dynamiclib $(SONAMEFLAGS) natpmp-jni.o -lc $(LIBOBJS)
 else
 	$(CC) $(LDFLAGS) -o $(JNISHAREDLIB) -shared $(SONAMEFLAGS) natpmp-jni.o -lc $(LIBOBJS)
@@ -143,7 +141,7 @@ jar: $(JNISHAREDLIB)
 	mkdir -p libraries/$(JNISHAREDLIBPATH)
 	mv $(JNISHAREDLIB) libraries/$(JNISHAREDLIBPATH)/$(JNISHAREDLIB)
 	$(RM) natpmp_$(JARSUFFIX).jar
-	jar cf natpmp_$(JARSUFFIX).jar @classes.list libraries/$(JNISHAREDLIBPATH)/$(JNISHAREDLIB) 
+	jar cf natpmp_$(JARSUFFIX).jar @classes.list libraries/$(JNISHAREDLIBPATH)/$(JNISHAREDLIB)
 	$(RM) classes.list
 
 jnitest: $(JNISHAREDLIB) JavaTest.class
@@ -175,14 +173,14 @@ natpmpc-shared:	natpmpc.o $(SHAREDLIB)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(STATICLIB):	$(LIBOBJS)
-ifeq ($(OS), Darwin)
+ifneq (, $(findstring darwin, $(OS)))
 	$(LIBTOOL) -static -o $@ $?
 else
 	$(AR) crs $@ $?
 endif
 
 $(SHAREDLIB):	$(LIBOBJS)
-ifeq ($(OS), Darwin)
+ifneq (, $(findstring darwin, $(OS)))
 #	$(CC) -dynamiclib $(LDFLAGS) -Wl,-install_name,$(SONAME) -o $@ $^ $(LDLIBS)
 	$(CC) -dynamiclib $(LDFLAGS) -Wl,-install_name,$(INSTALLDIRLIB)/$(SONAME) -o $@ $^ $(LDLIBS)
 else
