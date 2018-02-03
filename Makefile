@@ -1,7 +1,7 @@
 # $Id: Makefile,v 1.19 2012/08/21 17:24:07 nanard Exp $
 # This Makefile is designed for use with GNU make
 # libnatpmp
-# (c) 2007-2015 Thomas Bernard
+# (c) 2007-2018 Thomas Bernard
 # http://miniupnp.free.fr/libnatpmp.html
 
 OS = $(shell uname -s)
@@ -85,11 +85,11 @@ JNIHEADERS = fr_free_miniupnp_libnatpmp_NatPmp.h
 all: $(STATICLIB) $(SHAREDLIB) $(EXECUTABLES)
 
 pythonmodule: $(STATICLIB) libnatpmpmodule.c setup.py
-	python setup.py build
+	MAKE=$(MAKE) python setup.py build
 	touch $@
 
 installpythonmodule: pythonmodule
-	python setup.py install
+	MAKE=$(MAKE) python setup.py install
 
 clean:
 	$(RM) $(OBJS) $(EXECUTABLES) $(STATICLIB) $(SHAREDLIB) $(JAVACLASSES) $(JNISHAREDLIB)
