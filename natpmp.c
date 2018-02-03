@@ -1,6 +1,6 @@
 /* $Id: natpmp.c,v 1.18 2013/11/26 08:47:36 nanard Exp $ */
 /* libnatpmp
-Copyright (c) 2007-2013, Thomas BERNARD
+Copyright (c) 2007-2018, Thomas BERNARD
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -205,7 +205,7 @@ NATPMP_LIBSPEC int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 	unsigned char buf[16];
 	struct sockaddr_in addr;
 	socklen_t addrlen = sizeof(addr);
-	int n;
+	ssize_t n;
 	if(!p)
 		return NATPMP_ERR_INVALIDARGS;
 	n = recvfrom(p->s, buf, sizeof(buf), 0,
