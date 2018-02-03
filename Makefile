@@ -87,11 +87,11 @@ JNIHEADERS = fr_free_miniupnp_libnatpmp_NatPmp.h
 all: $(STATICLIB) $(SHAREDLIB) $(EXECUTABLES)
 
 pythonmodule: $(STATICLIB) libnatpmpmodule.c setup.py
-	python setup.py build
+	MAKE=$(MAKE) python setup.py build
 	touch $@
 
 installpythonmodule: pythonmodule
-	python setup.py install
+	MAKE=$(MAKE) python setup.py install
 
 clean:
 	$(RM) $(OBJS) $(EXECUTABLES) $(STATICLIB) $(SHAREDLIB) $(JAVACLASSES) $(JNISHAREDLIB)
