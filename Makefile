@@ -1,7 +1,7 @@
 # $Id: Makefile,v 1.19 2012/08/21 17:24:07 nanard Exp $
 # This Makefile is designed for use with GNU make
 # libnatpmp
-# (c) 2007-2015 Thomas Bernard
+# (c) 2007-2018 Thomas Bernard
 # http://miniupnp.free.fr/libnatpmp.html
 
 OS = $(shell $(CC) -dumpmachine)
@@ -13,10 +13,14 @@ INSTALL ?= $(shell which install)
 ifneq (, $(findstring darwin, $(OS)))
 JARSUFFIX=mac
 LIBTOOL ?= $(shell which libtool)
-else ifneq (, $(findstring linux, $(OS)))
+else
+ifneq (, $(findstring linux, $(OS)))
 JARSUFFIX=linux
-else ifneq (, $(findstring mingw, $(OS))$(findstring cygwin, $(OS))$(findstring msys, $(OS)))
+else
+ifneq (, $(findstring mingw, $(OS))$(findstring cygwin, $(OS))$(findstring msys, $(OS)))
 JARSUFFIX=win32
+endif
+endif
 endif
 
 # APIVERSION is used in soname
