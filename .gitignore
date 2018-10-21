@@ -19,3 +19,7 @@ natpmp_*.jar
 jnaerator*.jar
 libraries/
 build/
+msvc/.vs
+msvc/Release
+msvc/Debug
+*.user
