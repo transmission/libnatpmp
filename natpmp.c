@@ -258,15 +258,22 @@ NATPMP_LIBSPEC int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 			}
 		} else {
 			response->type = buf[1] & 0x7f;
-			if(buf[1] == 128)
+			if(buf[1] == 128) {
 				//response->publicaddress.addr = *((uint32_t *)(buf + 8));
 				response->pnu.publicaddress.addr.s_addr = *((uint32_t *)(buf + 8));
-			else {
-				response->pnu.newportmapping.privateport = ntohs(*((uint16_t *)(buf + 8)));
-				response->pnu.newportmapping.mappedpublicport = ntohs(*((uint16_t *)(buf + 10)));
-				response->pnu.newportmapping.lifetime = ntohl(*((uint32_t *)(buf + 12)));
+				n = 0;
+			} else {
+				/* check that the private port matches our current request */
+				if(*(uint16_t*)(p->pending_request + 4) == *((uint16_t*)(buf + 8))) {
+					response->pnu.newportmapping.privateport = ntohs(*((uint16_t*)(buf + 8)));
+					response->pnu.newportmapping.mappedpublicport = ntohs(*((uint16_t*)(buf + 10)));
+					response->pnu.newportmapping.lifetime = ntohl(*((uint32_t*)(buf + 12)));
+					n = 0;
+				} else {
+					/* ignore the old response and continue waiting */
+					n = NATPMP_TRYAGAIN;
+				}
 			}
-			n = 0;
 		}
 	}
 	return n;
