@@ -39,12 +39,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <io.h>
-#ifndef EWOULDBLOCK
+#ifdef EWOULDBLOCK
+#undef EWOULDBLOCK
+#endif
+#ifdef ECONNREFUSED
+#undef ECONNREFUSED
+#endif
 #define EWOULDBLOCK WSAEWOULDBLOCK
-#endif
-#ifndef ECONNREFUSED
 #define ECONNREFUSED WSAECONNREFUSED
-#endif
 #include "wingettimeofday.h"
 #define gettimeofday natpmp_gettimeofday
 #else
