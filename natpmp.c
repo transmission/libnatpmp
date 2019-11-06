@@ -286,7 +286,7 @@ NATPMP_LIBSPEC int readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * respon
 			gettimeofday(&now, NULL);	// check errors !
 			if(timercmp(&now, &p->retry_time, >=)) {
 				int delay, r;
-				if(p->try_number >= 9) {
+				if(p->try_number >= NATPMP_MAX_RETRIES) {
 					return NATPMP_ERR_NOGATEWAYSUPPORT;
 				}
 				/*printf("retry! %d\n", p->try_number);*/
