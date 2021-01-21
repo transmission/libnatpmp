@@ -57,8 +57,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef __APPLE__
 #undef USE_PROC_NET_ROUTE
-#undef USE_SOCKET_ROUTE
-#define USE_SYSCTL_NET_ROUTE
+#define USE_SOCKET_ROUTE
+#undef USE_SYSCTL_NET_ROUTE
 #endif
 
 #if (defined(sun) && defined(__SVR4))
