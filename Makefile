@@ -61,7 +61,7 @@ else
 endif
 endif
 
-HEADERS = natpmp.h
+HEADERS = natpmp.h natpmp_declspec.h
 
 EXECUTABLES = testgetgateway natpmpc-shared natpmpc-static
 
