@@ -27,7 +27,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 #ifdef __linux__
-#define _BSD_SOURCE 1
+#define _DEFAULT_SOURCE 1
 #endif
 #include <string.h>
 #include <time.h>
