@@ -87,18 +87,18 @@ static int addr_is_reserved(struct in_addr * addr)
 
 void usage(FILE * out, const char * argv0)
 {
-	fprintf(out, "Usage :\n");
-	fprintf(out, "  %s [options]\n", argv0);
-	fprintf(out, "\tdisplay the public IP address.\n");
-	fprintf(out, "  %s -h\n", argv0);
-	fprintf(out, "\tdisplay this help screen.\n");
-	fprintf(out, "  %s [options] -a <public port> <private port> <protocol> [lifetime]\n", argv0);
-	fprintf(out, "\tadd a port mapping.\n");
-	fprintf(out, "\nOption available :\n");
-	fprintf(out, "  -g ipv4address\n");
-	fprintf(out, "\tforce the gateway to be used as destination for NAT-PMP commands.\n");
-	fprintf(out, "\n  In order to remove a mapping, set it with a lifetime of 0 seconds.\n");
-	fprintf(out, "  To remove all mappings for your machine, use 0 as private port and lifetime.\n");
+    fprintf(out, "Usage :\n"
+        "  %s [options]\n"
+        "\tdisplay the public IP address.\n"
+        "  %s -h\n"
+        "\tdisplay this help screen.\n"
+        "  %s [options] -a <public port> <private port> <protocol> [lifetime]\n"
+        "\tadd a port mapping.\n"
+        "\nOption available :\n"
+        "  -g ipv4address\n"
+        "\tforce the gateway to be used as destination for NAT-PMP commands.\n"
+        "\n  In order to remove a mapping, set it with a lifetime of 0 seconds.\n"
+        "  To remove all mappings for your machine, use 0 as private port and lifetime.\n", argv0, argv0, argv0);
 }
 
 /* sample code for using libnatpmp */
