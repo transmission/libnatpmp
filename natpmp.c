@@ -319,7 +319,14 @@ NATPMP_LIBSPEC int readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * respon
 			}
 		}
 	} else {
-		p->has_pending_request = 0;
+		// check the response type
+		// we may receive reply from another type being reply to previous request because of network latency and retry mechanisms
+		if (p->pending_request[1] != response->type) {
+			n = NATPMP_TRYAGAIN;
+			// not a timeout : DON'T increment p->try_number and keep p->retry_time to trigger immediate receive retry, without new sending
+		} else {
+			p->has_pending_request = 0;
+		}
 	}
 	return n;
 }
