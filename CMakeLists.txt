@@ -33,3 +33,15 @@ add_executable(testgetgateway
 	testgetgateway.c
 	getgateway.c)
 target_link_libraries(testgetgateway natpmp)
+
+# install
+include(GNUInstallDirs)
+
+install(TARGETS natpmp natpmpc
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES natpmp.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
