@@ -21,7 +21,7 @@ target_include_directories(natpmp PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_compile_definitions(natpmp PRIVATE -DENABLE_STRNATPMPERR)
 
 if (WIN32)
-	target_link_libraries(natpmp PUBLIC ws2_32 Iphlpapi)
+	target_link_libraries(natpmp PUBLIC ws2_32 iphlpapi)
 	target_compile_definitions(natpmp PUBLIC -DNATPMP_STATICLIB)
 endif (WIN32)
 
