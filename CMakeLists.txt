@@ -15,14 +15,20 @@ if (WIN32)
     set (NATPMP_SOURCES ${NATPMP_SOURCES} wingettimeofday.c)
 endif (WIN32)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
 # Library itself
-add_library(natpmp STATIC ${NATPMP_SOURCES})
+add_library(natpmp ${NATPMP_SOURCES})
 target_include_directories(natpmp PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_compile_definitions(natpmp PRIVATE -DENABLE_STRNATPMPERR)
 
 if (WIN32)
 	target_link_libraries(natpmp PUBLIC ws2_32 iphlpapi)
-	target_compile_definitions(natpmp PUBLIC -DNATPMP_STATICLIB)
+	if (BUILD_SHARED_LIBS)
+		target_compile_definitions(natpmp PUBLIC -DNATPMP_EXPORTS)
+	else() # win static lib
+		target_compile_definitions(natpmp PUBLIC -DNATPMP_STATICLIB)
+	endif (BUILD_SHARED_LIBS)
 endif (WIN32)
 
 # Executables
