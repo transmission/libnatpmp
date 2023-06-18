@@ -25,6 +25,10 @@ if (WIN32)
 	target_compile_definitions(natpmp PUBLIC -DNATPMP_STATICLIB)
 endif (WIN32)
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Haiku")
+	target_link_libraries(natpmp PUBLIC network)
+endif ()
+
 # Executables
 add_executable(natpmpc natpmpc.c)
 target_link_libraries(natpmpc natpmp)
