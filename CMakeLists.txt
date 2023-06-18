@@ -38,6 +38,10 @@ if (WIN32)
 	endif (BUILD_SHARED_LIBS)
 endif (WIN32)
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Haiku")
+	target_link_libraries(natpmp PUBLIC network)
+endif ()
+
 # Executables
 add_executable(natpmpc natpmpc.c)
 target_link_libraries(natpmpc natpmp)
