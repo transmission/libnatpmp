@@ -4,7 +4,14 @@ if(POLICY CMP0048)
 	cmake_policy(SET CMP0048 NEW)
 endif()
 
-project(natpmp)
+file(STRINGS VERSION PVER)
+
+project(natpmp
+        LANGUAGES C
+        VERSION ${PVER}
+        DESCRIPTION "A portable and fully compliant implementation of the NAT-PMP protocol"
+        HOMEPAGE_URL "https://github.com/miniupnp/libnatpmp"
+)
 
 set (NATPMP_SOURCES
         natpmp.c
