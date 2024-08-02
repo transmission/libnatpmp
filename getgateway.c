@@ -269,6 +269,10 @@ int getdefaultgateway(in_addr_t *addr)
   rtm.rtm_seq = ++seq;
   rtm.rtm_addrs = rtm_addrs;
 
+#ifdef __OpenBSD__
+  rtm.rtm_tableid = getrtable();
+#endif
+
   so_dst.sa_family = AF_INET;
   so_dst.sa_len = sizeof(struct sockaddr);
   so_mask.sa_family = AF_INET;
